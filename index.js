@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
+import colors from "colors"
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -26,3 +27,14 @@ app.use("/client", clientRoutes);
 app.use("general", generalRoutes);
 app.use("managment", managementRoutes);
 app.use("/sales", salesRoutes);
+
+const PORT = process.env.PORT || 9000;
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(PORT, () => console.log(`Server Running on Port: ${PORT}`.rainbow));
+  })
+  .catch((error) => console.log(`Server Error: ${error}`));
