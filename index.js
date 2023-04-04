@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
-import colors from "colors"
+import colors from "colors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -22,10 +22,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
+// mock data import
+import User from "./models/User.js";
+import { dataUser } from "./data/index.js";
+
 /** ROUTES */
 app.use("/client", clientRoutes);
-app.use("general", generalRoutes);
-app.use("managment", managementRoutes);
+app.use("/general", generalRoutes);
+app.use("/managment", managementRoutes);
 app.use("/sales", salesRoutes);
 
 const PORT = process.env.PORT || 9000;
@@ -35,6 +39,12 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Running on Port: ${PORT}`.rainbow));
+    app.listen(PORT, () =>
+      console.log(`Server Running on Port: ${PORT}`.rainbow)
+    );
+
+    /** ONLY ADD DATA ONE TIME */
+    // User.insertMany(dataUser);
   })
+
   .catch((error) => console.log(`Server Error: ${error}`));
